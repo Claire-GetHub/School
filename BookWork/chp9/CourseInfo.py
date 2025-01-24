@@ -1,5 +1,5 @@
 
-
+#courseNumber: [classRoom, teacher, time]
 courseInfo = {
     'CS101': [3004, 'Haynes', '8:00 a.m.'],
     'CS102': [4501, 'Alvarado', '9:00 a.m.'],
@@ -10,12 +10,14 @@ courseInfo = {
 
 def main():
     while True:
+        #makes sure they put in an actual course
         course = input("Enter course number: ").upper()
         if course in courseInfo:
+            #prints everything
             print(courseInfo[course][0])
             print(courseInfo[course][1])
             print(courseInfo[course][2])
-            
+            #ends loop
             break
 
 main()

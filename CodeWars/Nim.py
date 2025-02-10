@@ -7,30 +7,29 @@ def choose_move(gs):
     nonOne = nonOnePiles(gs)
     uq = uniqueValues(nonEmpty)
     
-    #check if its the last move 
-    if (len(nonEmpty) == 1 
-        #or take a full pile if none are diffrent and there are more than 2 piles
-        or len(uq) == 0 and len(nonEmpty) > 2
-        #or there are only ones
-        or (len(nonOne) == 0 and len(nonEmpty) > 2)):
-        print("grab first pile")
-        pile = [*nonEmpty.keys()][0]
-        amount = nonEmpty[[*nonEmpty.keys()][0]]
-    
     #take pile that is diffrent
+    if len(nonEmpty) == 2 and max(nonEmpty, key=nonEmpty.get) != min(nonEmpty, key=nonEmpty.get):
+        pile = max(nonEmpty, key=nonEmpty.get)
+        amount = nonEmpty[max(nonEmpty, key=nonEmpty.get)] - nonEmpty[min(nonEmpty, key=nonEmpty.get)]
+    elif len(nonOne) == 1 or len(nonEmpty) == 2 :
+        print("main logic")
+        if  (len(nonEmpty) - 1) % 2 == 0:
+            leave = 0
+        else:
+            leave = 1
+        pile = [*nonEmpty.keys()][0]
+        amount = nonEmpty[[*nonEmpty.keys()][0]] - leave
     elif len(uq) == 1:
         print("grab unique pile")
         pile = [*uq.keys()][0]
         amount = uq[[*uq.keys()][0]]
-    elif len(nonOne) == 1:
-        print("grab non one pile")
-        leave = 1 if len(nonEmpty) > 2 and nonOne[[*nonOne.keys()][0]] != 2 else 2
-        pile = [*nonOne.keys()][0]
-        amount = nonOne[[*nonOne.keys()][0]] - leave
-    elif len(uq) == 0:
-        print("leave one in a pile")
+    # elif len(uq) == 0:
+    #     print("leave one in a pile")
+    #     pile = [*nonEmpty.keys()][0]
+    #     amount = nonEmpty[[*nonEmpty.keys()][0]] - 1
+    else:
         pile = [*nonEmpty.keys()][0]
-        amount = nonEmpty[[*nonEmpty.keys()][0]] - 1
+        amount = nonEmpty[[*nonEmpty.keys()][0]]
 
     return pile, amount
 
@@ -53,6 +52,4 @@ def uniqueValues(nonEmpty):
     return uniq
 
 
-nonEmpty = nonEmptyPiles([0,0,3,3,5])
-print(choose_move([0,0,0,1,2]))
-#1
+print(choose_move([0, 0, 0, 0, 0, 0, 1, 9]))

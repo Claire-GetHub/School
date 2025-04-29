@@ -7,10 +7,10 @@ def choose_move(gs):
     nonOne = nonOnePiles(gs)
     uq = uniqueValues(nonEmpty)
     
-    #take pile that is diffrent
+    #take pile that is different
     if len(nonEmpty) == 2 and nonEmpty[max(nonEmpty, key=nonEmpty.get)] != nonEmpty[min(nonEmpty, key=nonEmpty.get)]:
         print("even out piles")
-        leave = 2 if nonEmpty[min(nonEmpty, key=nonEmpty.get)] == 1 else nonEmpty[min(nonEmpty, key=nonEmpty.get)]
+        leave = 2 if nonEmpty[min(nonEmpty, key=nonEmpty.get)] == 1 and nonEmpty[max(nonEmpty, key=nonEmpty.get)] != 2 else nonEmpty[min(nonEmpty, key=nonEmpty.get)]
 
         pile = max(nonEmpty, key=nonEmpty.get)
         amount = nonEmpty[max(nonEmpty, key=nonEmpty.get)] - leave
@@ -56,4 +56,4 @@ def uniqueValues(nonEmpty):
     return uniq
 
 
-print(choose_move([0, 3, 5]))
+print(choose_move([0, 1,2]))

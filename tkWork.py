@@ -65,6 +65,25 @@ class JoeAutomotive(TKBase):
                 total += check[1]
         self.value.set(total)
 
+# noinspection PyAttributeOutsideInit
+class LatinTranslator(TKBase):
+
+    def main(self) -> None:
+        self.top = Frame(self.root)
+        self.bottom = Frame(self.root)
+
+        self.sinister = Button(self.top, text= "sinister", command= lambda: self.show("left"))
+        self.dexter = Button(self.top, text= "dexter", command= lambda: self.show("right"))
+        self.medium = Button(self.top, text= "medium", command= lambda: self.show("center"))
+
+        self.text = StringVar()
+        self.label = Label(self.bottom, textvariable= self.text)
+
+        self.add(self, [self.top, self.bottom, self.sinister, self.dexter, self.medium, self.label])
+
+    def show(self, message: str):
+        self.text.set(message)
+
 
 if __name__ == "__main__":
-    tk = JoeAutomotive()
+    tk = LatinTranslator()

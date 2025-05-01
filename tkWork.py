@@ -84,6 +84,24 @@ class LatinTranslator(TKBase):
     def show(self, message: str):
         self.text.set(message)
 
+# noinspection PyAttributeOutsideInit
+class PropertyTax(TKBase):
+    def main(self):
+        self.top = Frame(self.root)
+
+
+        self.value = Entry(self.top, width=10)
+
+        self.button = Button(self.top, text= "calculate", command=self.calculate)
+        self.text = StringVar()
+        self.label = Label(self.top, textvariable= self.text)
+
+        self.add(self, [self.top, self.value, self.button, self.label])
+
+    def calculate(self):
+        self.aValue = float(self.value.get()) * .60
+        self.text.set((self.aValue /100) * .75)
+
 
 if __name__ == "__main__":
-    tk = LatinTranslator()
+    tk = PropertyTax()

@@ -35,7 +35,6 @@ from tkinter import messagebox
 
 #         mainloop()
 
-
 class KiloCovertGui:
     def __init__(self):
         self.mainWindow = Tk()
@@ -221,7 +220,7 @@ class CToF:
         fahr = (9/5) * cel + 32
         
         self.value.set(fahr)
-#3
+
 class MPerG:
     def __init__(self):
         self.mainWindow = Tk()

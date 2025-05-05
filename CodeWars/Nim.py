@@ -6,35 +6,38 @@ def choose_move(gs):
     nonEmpty = nonEmptyPiles(gs)
     nonOne = nonOnePiles(gs)
     uq = uniqueValues(nonEmpty)
-    
-    #take pile that is different
-    if len(nonEmpty) == 2 and nonEmpty[max(nonEmpty, key=nonEmpty.get)] != nonEmpty[min(nonEmpty, key=nonEmpty.get)]:
-        print("even out piles")
-        leave = 2 if nonEmpty[min(nonEmpty, key=nonEmpty.get)] == 1 and nonEmpty[max(nonEmpty, key=nonEmpty.get)] != 2 else nonEmpty[min(nonEmpty, key=nonEmpty.get)]
+    if len(nonOne) != 0:
+        large = max(nonOne, key=nonOne.get)
+        small = min(nonOne, key=nonOne.get)
+    else:
+        #make large and small diffrent variables
+        ...
 
-        pile = max(nonEmpty, key=nonEmpty.get)
-        amount = nonEmpty[max(nonEmpty, key=nonEmpty.get)] - leave
-    elif len(nonOne) == 1 or len(nonEmpty) == 2 :
-        print("main logic")
-        if  (len(nonEmpty) - 1) % 2 == 0:
-            leave = 0
-        else:
-            leave = 1
-        print(leave)
-        pile = [*nonEmpty.keys()][0]
-        amount = nonEmpty[[*nonEmpty.keys()][0]] - leave
+    key0 = [*nonEmpty.keys()][0]
+    
+    #take pile that is diffrent
+    if len(nonOne) == 2 and large != small:
+        print("even out piles")
+
+        pile = large
+        amount = nonEmpty[large] - nonEmpty[small]
+    elif len(nonEmpty) == 2 or len(nonOne) == 1:
+        print("leave 0 or 1")
+       
+        leave = (len(nonEmpty) - 1) % 2
+
+
+        pile = large
+        amount = nonEmpty[large] - leave
     elif len(uq) == 1:
         print("grab unique pile")
         pile = [*uq.keys()][0]
         amount = uq[[*uq.keys()][0]]
-    # elif len(uq) == 0:
-    #     print("leave one in a pile")
-    #     pile = [*nonEmpty.keys()][0]
-    #     amount = nonEmpty[[*nonEmpty.keys()][0]] - 1
     else:
-        pile = [*nonEmpty.keys()][0]
-        amount = nonEmpty[[*nonEmpty.keys()][0]]
+        pile = key0
+        amount = nonEmpty[key0]
 
+    print(gs)
     return pile, amount
 
 
@@ -56,4 +59,4 @@ def uniqueValues(nonEmpty):
     return uniq
 
 
-print(choose_move([0, 1,2]))
+print(choose_move([2, 3, 1]))

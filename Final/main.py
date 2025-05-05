@@ -1,5 +1,6 @@
 from functions import *
 
+# lets user create a savable wish list, including item name, quantity, 
 
 def main ():
     #initialize wList
@@ -9,8 +10,8 @@ def main ():
         #if the value of output is False dont print
         if (output := menu()):
             #otherwise print the output
-            print(output)
-    
+            print(f"\n{output}")
+
 
 
 if __name__ == "__main__":

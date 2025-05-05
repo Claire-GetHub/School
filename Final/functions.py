@@ -4,32 +4,6 @@ import csv
 #global. It is used throughout each function
 wList = {}
 
-#checks if there is a already made file
-def check():
-    try:
-       file = open("wishList.csv", "r")
-    except FileNotFoundError:
-        #returns false so create list doesnt run
-        return False
-    else:
-        #returns the file so createList can create the list from the function
-        return file
-
-#add everything from a csv file to wList
-def createList(file):
-    #parameters
-        #file: is either the wishList file or False
-    #checks if file is actual the file
-    if file:
-        with file as csvfile:
-            #makes it readable
-            reader = csv.DictReader(csvfile)
-            #the headers of the csv file
-            headers = ['Item','Quantity','Price','Favorite']
-            #turns into the format I want
-            for row in reader:
-                #create a new key in the dict named the items name then create a list with the rest of the items values
-                wList[row[headers[0]]] = [row[headers[1]],row[headers[2]], row[headers[3]]]
 
 #view wList in format
 def view():
@@ -44,7 +18,7 @@ def view():
 #add a user specified            
 def addItem():
     #the name of the item they want to add
-    item = input("Enter the name of the item to add: ")
+    item = input("Enter the name of the item to add: ").strip().title()
 
     #check if it exists
     if item in wList.keys():
@@ -53,16 +27,16 @@ def addItem():
     else: 
         wList[item] = [0,0.0,False]
         #returns false so nothing is printed
-        return False
+        return f"{item} added to your wish list with default values."
 
 #update a user specified
 def updateItem():
     #the name of the item to be updated
-    item = input("Enter the name of the item to update: ")
+    item = input("Enter the name of the item to update: ").strip().title()
     #checks if it exists
     if item in wList.keys():
         #current values
-        print(f"Current values for {item}: qty={wList[item][0]}, price={wList[item][1]}, favorite={wList[item][2]}")
+        print(f"Current values for {item}:\nqty: {wList[item][0]}\nprice: {wList[item][1]}\nfavorite: {wList[item][2]}")
         #new values
         quan = checkFloat("Enter the new quantity: ")
         price = checkFloat("Enter the new price: ")
@@ -75,29 +49,12 @@ def updateItem():
         #returns error to be printed
         return f"{item} is not in your wish list."
 
-#returns a float   
-def checkFloat(str):
-    #parameters
-        #str: the user prompt
-    while True:
-        try:
-            return float(input(str))
-        except ValueError:
-            pass
 
-#returns true or false
-def checkYesNo():
-    while True:
-        anw = input("Is it a favorite? (yes/no):  ")
-        if anw.lower() == "yes":
-            return True
-        elif anw.lower() == "no":
-            return False
 
-#delete a user specified
+#delete a user specified item
 def deleteItem():
     #the name of the item to be deleted
-    item = input("Enter the name of the item to delete: ")
+    item = input("Enter the name of the item to delete: ").strip().title()
     #checks if item exists
     if item in wList.keys():
         #deletes item
@@ -110,12 +67,10 @@ def deleteItem():
 
 #new dict that is sorted from lowest price to highest price
 def sortPrice():
-    #creates dict
-        # price: item name
-    prices = {}
-    for item in wList:
-        prices[float(wList[item][1])] = item
-        
+    #new dictionary
+        #price: item name
+    keys = wList.keys()
+    prices = {float(wList[item][1]): item for item in keys}
     #list of prices
     keys = list(prices.keys())
     #sorts prices
@@ -136,7 +91,10 @@ def sortPrice():
     #    wList[item] = nd[item]
 
     #returns new dict to be printed
-    return tabulate(nd)
+    if len(nd) > 0:
+        return tabulate(nd)
+    else:
+        return "Your wish list is empty."
 
 #creates new dict with only favorites
 def sortFav():
@@ -148,7 +106,10 @@ def sortFav():
             #if it is a favorite add it to the fav list
             fav[item] = wList[item]
     #return fav to be printed
-    return tabulate(fav)
+    if len(fav) > 0:
+        return tabulate(fav)
+    else:
+        return "Shopping wish list has no favorites"
 
 #clear wList
 def clear():
@@ -156,6 +117,7 @@ def clear():
     for item in wList.copy():
         #delete the item
         del wList[item]
+    return "shopping wish list cleared successfully"
 
 #saves wList to a csv file and exits program
 def exitSave():
@@ -167,8 +129,41 @@ def exitSave():
         for item in wList:
             #writes down each row
             writer.writerow({'Item': item, 'Quantity': wList[item][0], 'Price': wList[item][1], 'Favorite': wList[item][2]})
-
+    print("Shopping wish list saved successfully")
     sys.exit()
+
+
+#name of each funtion so we can run them
+choices = ["index 0", view, addItem, updateItem, deleteItem, sortPrice, sortFav, clear, exitSave]
+
+def menu():
+    #the printed menu
+    print(f"\nWelcome to the Shopping Wish List!\n\n\
+    1. View Wish List\n\
+    2. Add an Item\n\
+    3. Update an Item\n\
+    4. Delete an item\n\
+    5. Sort Wish List by Price\n\
+    6. Sort Wish List by Favorites\n\
+    7. Clear Wish List\n\
+    8. Exit & Save\n")
+
+    #your choice
+    choice = input("Enter your choice: ").strip()
+    #spacing
+    print("")
+    #if its a value in the choices list
+    if choice.isdigit() and 9 > int(choice) > 0:
+        #runs the choosen function and returns what the funtion returns
+        return choices[int(choice)]()
+
+
+
+
+
+
+#utiliy functions
+
 
 #turns a special type of dictionary into a string with specific formate
 def tabulate(list):
@@ -206,32 +201,55 @@ def tabulate(list):
 
 #returns an amount of spaces decided by num
 def spaces (num):
-    text = ""
-    for i in range(num):
-        text += " "
-    return text
+    # text = ""
+    # for i in range(num):
+    #     text += " "
+    # return text
+    return " " * num
 
+#returns a float 
+#used for quantity(incase I want half of something) and price (price often incudes cents)  
+def checkFloat(str):
+    #parameters
+        #str: the user prompt
+    while True:
+        try:
+            return float(input(str).strip().strip("$"))
+        except ValueError:
+            pass
 
-#name of each funtion so we can run them
-choices = ["index 0", view, addItem, updateItem, deleteItem, sortPrice, sortFav, clear, exitSave]
+#returns true or false
+def checkYesNo():
+    while True:
+        anw = input("Is it a favorite? (yes/no):  ").strip().lower()
+        if anw == "yes":
+            return "True"
+        elif anw == "no":
+            return "False"
+        
+#checks if there is a already made file
+def check():
+    try:
+       file = open("wishList.csv", "r")
+    except FileNotFoundError:
+        #returns false so create list doesnt run
+        return False
+    else:
+        #returns the file so createList can create the list from the function
+        return file
 
-def menu():
-    #the printed menu
-    print(f"\nWelcome to the Shopping Wish List!\n\n\
-    1. View Wish List\n\
-    2. Add an Item\n\
-    3. Update an Item\n\
-    4. Delete an item\n\
-    5. Sort Wish List by Price\n\
-    6. Sort Wish List by Favorites\n\
-    7. Clear Wish List\n\
-    8. Exit & Save\n")
-
-    #your choice
-    choice = input("Enter your choice: ")
-    #spacing because it loos nice
-    print("")
-    #if its a value in the choices list
-    if choice.isdigit() and 9 > int(choice) > 0:
-        #runs the choosen function and returns what the funtion returns
-        return choices[int(choice)]()
+#add everything from a csv file to wList
+def createList(file):
+    #parameters
+        #file: is either the wishList file or False
+    #checks if file is actual the file
+    if file:
+        with file as csvfile:
+            #makes it readable
+            reader = csv.DictReader(csvfile)
+            #the headers of the csv file
+            headers = ['Item','Quantity','Price','Favorite']
+            #turns into the format I want
+            for row in reader:
+                #create a new key in the dict named the items name then create a list with the rest of the items values
+                wList[row[headers[0]]] = [row[headers[1]],row[headers[2]], row[headers[3]]]

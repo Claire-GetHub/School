@@ -102,6 +102,58 @@ class WishList:
             #returns failed
             return False 
         
+    def sortFav(self) -> dict:
+        """
+        returns a dictionary with only contains favorites
+
+        :returns: a dict that only contains favorites. In the format: "item: [quantity, price, favorite]"
+        """
+        fav = {}
+
+        for item in self.__wList:
+            #the 2nd value in each items list is a boolean. Whether its a favorite or not
+            if self.__wList[item][2] == "True":
+                #if it is a favorite add it to the fav list
+                fav[item] = self.__wList[item]
+        #return fav to be printed
+        return fav
+        
+
+    def sortPrice(self, lowest: bool = True, fav: bool = False) -> dict:
+        """
+        returns a dictionary sorted by price
+
+        :param lowest: sorts lowest to highest if True. Sorts highest to lowest if False.
+
+        :returns: a dict that is sorted by price. In the format: "item: [quantity, price, favorite]"
+        """
+        list = self.sortFav() if fav else self.__wList
+
+        #new dictionary
+        #price: item name
+        keys = list.keys()
+        prices = {float(list[item][1]): item for item in keys}
+        #list of prices
+        keys = list(prices.keys())
+        #sorts prices
+        keys.sort()
+        #creates sorted dictionary
+            #item name: price
+        sd = {prices[i]: i for i in keys}
+
+        #list of items
+        keys = sd.keys()
+        if not lowest:
+            keys.reverse()
+        #creates new dictionary
+            #item name: [item values from wList]
+        nd = {i:list[i] for i in keys}
+
+        
+        return nd
+        
+
+        
     @property  
     def view(self) -> dict:
         return self.__wList

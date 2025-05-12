@@ -12,6 +12,6 @@ class TKBase:
         pass
 
     @staticmethod
-    def add(self, wids: list, side = TOP) -> None:
+    def add(wids: list, side = TOP) -> None:
         for wid in wids:
             wid.pack(side= side)

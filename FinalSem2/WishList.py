@@ -79,16 +79,15 @@ class WishList:
         """        
         #check if it exists
         if item in self.__wList.keys():
-            return False
-        #if it doesnt adds it with base values
-        else: 
             self.__wList[item] = values
-            #returns false so nothing is printed
             return True
+        #if it doesnt adds it with base values
+        else:  
+            return False
         
     def deleteItem(self, item: str) -> bool:
         """
-        removes an itemm from the wishlist
+        removes an item from the wishlist
 
         :returns: a bool that shows whether the deleting was successful or not
         """

@@ -126,12 +126,12 @@ class WishList:
 
         :returns: a dict that is sorted by price. In the format: "item: [quantity, price, favorite]"
         """
-        list = self.sortFav() if fav else self.__wList
+        l = self.sortFav() if fav else self.__wList
 
         #new dictionary
         #price: item name
-        keys = list.keys()
-        prices = {float(list[item][1]): item for item in keys}
+        keys = l.keys()
+        prices = {float(l[item][1]): item for item in keys}
         #list of prices
         keys = list(prices.keys())
         #sorts prices
@@ -146,7 +146,7 @@ class WishList:
             keys.reverse()
         #creates new dictionary
             #item name: [item values from wList]
-        nd = {i:list[i] for i in keys}
+        nd = {i:l[i] for i in keys}
 
         
         return nd
@@ -157,6 +157,7 @@ class WishList:
     def view(self) -> dict:
         return self.__wList
 
-        
+
+
     
             

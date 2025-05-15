@@ -157,16 +157,29 @@ class Gui (TKBase):
     #for all
     @staticmethod
     def multiFunc(*args):
+        """
+        Runs all arguments.
+        :param args: All the functions you want to run.
+        """
         for func in args:
             func()
 
-    def switchFrames(self, newFrame):
+    def switchFrames(self, newFrame: Frame):
+        """
+        Unpacks the self.currentFrame. Packs newFrame. Sets self.currentFrame to the newFrame.
+        :param newFrame: The frame that is being switched with self.currentFrame.
+        """
         self.currentFrame.pack_forget()
         self.currentFrame = newFrame
         self.currentFrame.pack()
-    
+
+
     #for view scene
     def showWList(self, wList: dict):
+        """
+        Shows the current info from the given dictionary on the lightboxes.
+        :param wList: the dictionary with the dictionary to be shown. In the formate "item: [quantity, price, favorite]".
+        """
         self.nameList.delete(0, END)
         self.quaList.delete(0, END)
         self.priceList.delete(0, END)
@@ -181,6 +194,10 @@ class Gui (TKBase):
             i += 1
 
     def findClicked(self):
+        """
+        Finds the current item clicked on the lightboxes.
+        :return: returns the name of the clicked item.
+        """
         num = None
 
         for i in self.nameList.curselection():
@@ -198,31 +215,41 @@ class Gui (TKBase):
         if num is not None:
             return self.nameList.get(num)
         return False
-    
+
+
+    #for add scene
+
     def clearInfo(self):
+        """
+        Resets all values in the entry boxes.
+        """
         self.nameVar.set("")
         self.quaVar.set("")
         self.priceVar.set("")
         self.favVar.set(0)
 
-    #for add scene
-    @staticmethod
-    def checkVar(var):
-        if var.get() == 1:
-            return True
-        else:
-            return False
-        
     def editFunc(self, b: bool):
+        """
+        changes the value of self.editType to b.
+        :param b: self.editType new value.
+        """
         self.editType = b
 
     def nameState(self, b: bool):
+        """
+        Disables or enables the name entry box.
+        :param b: True, the box is enabled. False, the box is disabled.
+        """
         if b:
             self.nameInput["state"] = "normal"
         else:
             self.nameInput["state"] = "disabled"
         
     def checkEntries(self) -> bool:
+        """
+        Checks for and sets output text to error. If any.
+        :return: True, if there are no errors. False, if there is an error.
+        """
         if self.nameVar.get() == "" or self.quaVar.get() == "" or self.priceVar.get() == "":
             self.outputChange.set("Missing information!")
         elif not self.quaVar.get().strip().isdigit():
@@ -237,7 +264,9 @@ class Gui (TKBase):
 #BUTTON METHODS
     
     def changeFunc (self):
-
+        """
+        Runs when the add/update button is clicked. Adds the information to self.wList.
+        """
         if self.checkEntries():
             return
 
@@ -245,7 +274,7 @@ class Gui (TKBase):
         itemName = self.nameVar.get().strip()
         val = [self.quaVar.get().strip(),
         self.priceVar.get().strip(),
-        str(self.checkVar(self.favVar))]
+        "True" if self.favVar.get() else "False"]
 
         if self.editType:
             if self.wList.addItem(itemName, val):
@@ -263,11 +292,11 @@ class Gui (TKBase):
 
     def sortFunc (self):
 
-        if self.checkVar(self.sortFavVar) and self.checkVar(self.sortPriceVar):
+        if self.sortFavVar.get() and self.sortPriceVar.get():
             shownList = self.wList.sortPrice(fav= True)
-        elif self.checkVar(self.sortFavVar):
+        elif self.sortFavVar.get():
             shownList = self.wList.sortFav()
-        elif self.checkVar(self.sortPriceVar):
+        elif self.sortPriceVar.get():
             shownList = self.wList.sortPrice()
         else:
             shownList = self.wList.view

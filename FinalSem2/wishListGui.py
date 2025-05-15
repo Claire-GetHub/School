@@ -3,6 +3,7 @@ from TKBase import TKBase
 from WishList import WishList
 from re import match
 
+# noinspection PyAttributeOutsideInit
 class Gui (TKBase):
     def main(self) -> None:
         self.wList = WishList()
@@ -145,14 +146,16 @@ class Gui (TKBase):
             i += 1
 
 
-    def multiFunc(self, funcs: list):
+    @staticmethod
+    def multiFunc(funcs: list):
         for func in funcs:
             func()
 
     def editFunc(self, b: bool):
         self.editType = b
 
-    def checkVar(self, var):
+    @staticmethod
+    def checkVar(var):
         if var.get() == 1:
             return True
         else:
@@ -164,7 +167,7 @@ class Gui (TKBase):
         self.priceVar.set("")
         self.favVar.set(0)
 
-    def findclicked(self):
+    def findClicked(self):
         num = None
 
         for i in self.nameList.curselection():
@@ -179,7 +182,7 @@ class Gui (TKBase):
         for i in self.favList.curselection():
             num = i
 
-        if num != None:
+        if num is not None:
             return self.nameList.get(num)
         return False
 
@@ -218,7 +221,7 @@ class Gui (TKBase):
                 self.outputChange.set("Item Doesn't exist")
 
     def sortFunc (self):
-        shownList = None
+
         if self.checkVar(self.sortFavVar) and self.checkVar(self.sortPriceVar):
             shownList = self.wList.sortPrice(fav= True)
         elif self.checkVar(self.sortFavVar):
@@ -231,7 +234,7 @@ class Gui (TKBase):
         self.showWList(shownList)
 
     def updateFunc(self):
-        if (item := self.findclicked()) == False:
+        if not (item := self.findClicked()):
             return
         
         self.switchFrames(self.changeFrame)
@@ -243,7 +246,7 @@ class Gui (TKBase):
         self.outputChange.set("")
 
     def delFunc(self):
-        if (item := self.findclicked()) == False:
+        if not (item := self.findClicked()):
             return
 
         self.wList.deleteItem(item)

@@ -19,9 +19,10 @@ class Gui (TKBase):
 
 
         #MAIN FRAME
-        self.view = Button(self.mainFrame, text= "view", command= lambda : self.multiFunc([lambda : self.switchFrames(self.viewFrame), lambda : self.showWList(self.wList.view)]))
-        self.addItem = Button(self.mainFrame, text= "addItem", command= lambda : self.multiFunc([lambda : self.switchFrames(self.changeFrame), lambda : self.editFunc(True), self.clearInfo, lambda: self.outputChange.set("")]))
-        self.exit = Button(self.mainFrame, text= "save", command= self.save)
+        self.view = Button(self.mainFrame, text= "view", command= lambda : self.multiFunc(lambda : self.switchFrames(self.viewFrame), lambda : self.showWList(self.wList.view)))
+        self.addItem = Button(self.mainFrame, text= "addItem", command= lambda : self.multiFunc(lambda : self.switchFrames(self.changeFrame), lambda : self.editFunc(True), self.clearInfo, lambda: self.outputChange.set("")))
+        self.clear = Button(self.mainFrame, text= "clear list", command= self.wList.clear)
+        self.exit = Button(self.mainFrame, text= "save", command= lambda : self.multiFunc(self.wList.save, self.root.destroy))
         
 
         #VIEW FRAME
@@ -85,6 +86,7 @@ class Gui (TKBase):
         self.add([self.view,
         self.addItem,
         self.updateItem,
+        self.clear,
         self.exit])
 
         #view frame packing
@@ -147,8 +149,8 @@ class Gui (TKBase):
 
 
     @staticmethod
-    def multiFunc(funcs: list):
-        for func in funcs:
+    def multiFunc(*args):
+        for func in args:
             func()
 
     def editFunc(self, b: bool):
@@ -251,10 +253,6 @@ class Gui (TKBase):
 
         self.wList.deleteItem(item)
         self.showWList(self.wList.view)
-
-    def save(self):
-        self.wList.save()
-        self.root.destroy()
         
 
 

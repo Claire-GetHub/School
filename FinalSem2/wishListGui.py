@@ -9,114 +9,136 @@ class Gui (TKBase):
         self.wList = WishList()
 
         #scenes
-        self.mainFrame = Frame(self.root)
-        self.viewFrame = Frame(self.root)
-        self.changeFrame = Frame(self.root)
+        self.mainScene = Frame(self.root)
+        self.viewScene = Frame(self.root)
+        self.changeScene = Frame(self.root)
 
         #variables
-        self.currentFrame = self.mainFrame
+        self.currentFrame = self.mainScene
         self.editType = None
 
 
-        #MAIN FRAME
-        self.view = Button(self.mainFrame, text= "view", command= lambda : self.multiFunc(lambda : self.switchFrames(self.viewFrame), lambda : self.showWList(self.wList.view)))
-        self.addItem = Button(self.mainFrame, text= "addItem", command= lambda : self.multiFunc(lambda : self.switchFrames(self.changeFrame), lambda : self.editFunc(True), self.clearInfo, lambda: self.outputChange.set("")))
-        self.clear = Button(self.mainFrame, text= "clear list", command= self.wList.clear)
-        self.exit = Button(self.mainFrame, text= "save", command= lambda : self.multiFunc(self.wList.save, self.root.destroy))
+    #MAIN SCENE
+        
+        self.view = Button(self.mainScene, text= "View", command= lambda : self.multiFunc(lambda : self.switchFrames(self.viewScene), lambda : self.showWList(self.wList.view), lambda : self.outputView.set("")))
+        self.addItem = Button(self.mainScene, text= "Add Item", command= lambda : self.multiFunc(lambda : self.switchFrames(self.changeScene), lambda : self.editFunc(True), self.clearInfo, lambda: self.outputChange.set(""), lambda : self.nameState(True)))
+        self.exit = Button(self.mainScene, text= "Exit", command= lambda : self.multiFunc(self.wList.save, self.root.destroy))
         
 
-        #VIEW FRAME
-        self.nameFrame = Frame(self.viewFrame)
-        self.quaFrame = Frame(self.viewFrame)
-        self.priceFrame = Frame(self.viewFrame)
-        self.favFrame = Frame(self.viewFrame)
-        self.rightFrame = Frame(self.viewFrame)
+    #VIEW SCENE
 
-        #Item, Quantity, Price, Favorite
-        self.nameLLabel = Label(self.nameFrame, text= "Name")
+        #listboxes frames
+        self.nameFrame = Frame(self.viewScene)
+        self.quaFrame = Frame(self.viewScene)
+        self.priceFrame = Frame(self.viewScene)
+        self.favFrame = Frame(self.viewScene)
+
+        #view's buttons frame
+        self.rightFrame = Frame(self.viewScene)
+        
+
+        #Listboxes and labels
+            #Order: Item, Quantity, Price, Favorite
+        self.nameListLabel = Label(self.nameFrame, text= "Name")
         self.nameList = Listbox(self.nameFrame, height= 20, width= 10)
 
-        self.quaLLabel = Label(self.quaFrame, text= "Quantity")
+        self.quaListLabel = Label(self.quaFrame, text= "Quantity")
         self.quaList = Listbox(self.quaFrame, height= 20, width= 10)
 
-        self.priceLLabel = Label(self.priceFrame, text= "Price")
+        self.priceListLabel = Label(self.priceFrame, text= "Price")
         self.priceList = Listbox(self.priceFrame, height= 20, width= 10)
 
-        self.favLLabel = Label(self.favFrame, text= "Favorite")
+        self.favListLabel = Label(self.favFrame, text= "Favorite")
         self.favList = Listbox(self.favFrame, height= 20, width= 10)
-
+        
+        #view's buttons
         self.delItem = Button(self.rightFrame, text= "Delete Item", command= self.delFunc)
         self.updateItem = Button(self.rightFrame, text= "Update Item", command= self.updateFunc)
 
+        self.sortLabel = Label(self.rightFrame, text= "Sort")
         self.sortFavVar = IntVar()
         self.fav = Checkbutton(self.rightFrame, variable= self.sortFavVar, text= "Favorite", command= self.sortFunc)
         self.sortPriceVar = IntVar()
         self.price = Checkbutton(self.rightFrame, variable= self.sortPriceVar, text= "Price", command= self.sortFunc)
 
-        self.exitView = Button(self.rightFrame, text= "mainMenu", command= lambda : self.switchFrames(self.mainFrame))
+        self.clear = Button(self.rightFrame, text= "Clear List", command= lambda : self.multiFunc(self.wList.clear, lambda : self.showWList(self.wList.view), self.wList.save))
 
-        #ADD FRAME
-        self.nameLabel = Label(self.changeFrame, text= "Name")  
+        self.outputView = StringVar()
+        self.outputLView = Label(self.rightFrame, textvariable= self.outputView) 
+
+        self.exitView = Button(self.rightFrame, text= "Main Menu", command= lambda : self.switchFrames(self.mainScene))
+
+
+    #ADD SCENE
+        
+        #entry boxes, labels, and variables
+        self.nameLabel = Label(self.changeScene, text= "Name")  
         self.nameVar = StringVar() 
-        self.nameInput = Entry(self.changeFrame, textvariable= self.nameVar)
+        self.nameInput = Entry(self.changeScene, textvariable= self.nameVar)
 
-        self.quantityLabel = Label(self.changeFrame, text= "Quantity")   
+        self.quantityLabel = Label(self.changeScene, text= "Quantity")   
         self.quaVar = StringVar()
-        self.quantityInput = Entry(self.changeFrame, textvariable= self.quaVar)  
+        self.quantityInput = Entry(self.changeScene, textvariable= self.quaVar)  
 
-        self.priceLabel = Label(self.changeFrame, text= "Price")  
+        self.priceLabel = Label(self.changeScene, text= "Price")  
         self.priceVar = StringVar()
-        self.priceInput = Entry(self.changeFrame, textvariable= self.priceVar)  
+        self.priceInput = Entry(self.changeScene, textvariable= self.priceVar)  
 
-        self.favoriteLabel = Label(self.changeFrame, text= "Favorite")   
+        self.favoriteLabel = Label(self.changeScene, text= "Favorite")   
         self.favVar = IntVar()
-        self.favoriteInput = Checkbutton(self.changeFrame, variable= self.favVar) 
+        self.favoriteInput = Checkbutton(self.changeScene, variable= self.favVar) 
 
-        self.changeButton = Button(self.changeFrame, text= "add/update", command= self.changeFunc)
+        #buttons and output label
+        self.changeButton = Button(self.changeScene, text= "Add/Update", command= self.changeFunc)
+
 
         self.outputChange = StringVar()
-        self.outputLabel = Label(self.changeFrame, textvariable= self.outputChange) 
+        self.outputLabel = Label(self.changeScene, textvariable= self.outputChange) 
 
-        self.exitChange = Button(self.changeFrame, text= "mainMenu", command= lambda : self.switchFrames(self.mainFrame))
+        self.exitChange = Button(self.changeScene, text= "Main Menu", command= lambda : self.switchFrames(self.mainScene))
 
-
-        self.mainFrame.pack()
+    #initial scene pack
+        self.mainScene.pack()
         
-        #main frame packing
-        self.add([self.view,
+    #main scene packing
+        self.add(self.view,
         self.addItem,
         self.updateItem,
-        self.clear,
-        self.exit])
+        self.exit)
 
-        #view frame packing
-        self.add([self.nameFrame,
+    #view scene packing
+        #frame packing
+        self.add(self.nameFrame,
         self.quaFrame,
         self.priceFrame,
-        self.favFrame,
-        self.rightFrame], side= LEFT)
+        self.favFrame, side= LEFT)
+        self.rightFrame.pack(side= RIGHT)
 
-        self.add([self.nameLLabel,
-        self.quaLLabel,
-        self.priceLLabel,
-        self.favLLabel], side= TOP)
+        #listbox label packing
+        self.add(self.nameListLabel,
+        self.quaListLabel,
+        self.priceListLabel,
+        self.favListLabel, side= TOP)
 
-        
-        self.add([self.nameList,
+        #listbox packing
+        self.add(self.nameList,
         self.quaList,
         self.priceList,
-        self.favList], side= LEFT)
+        self.favList, side= LEFT)
 
-        self.rightFrame.pack(side="right")
-        self.add([ self.delItem,
+        #view buttons packing
+        self.add(self.delItem,
         self.updateItem,
+        self.clear,
+        self.sortLabel,
         self.fav,
         self.price,
-        self.exitView])
+        self.outputLView,
+        self.exitView)
 
-        #add frame packing
+    #add scene packing
                                                          
-        self.add([self.nameLabel,
+        self.add(self.nameLabel,
         self.nameInput,
         self.quantityLabel,
         self.quantityInput,
@@ -126,13 +148,24 @@ class Gui (TKBase):
         self.favoriteInput,
         self.changeButton,
         self.outputLabel,
-        self.exitChange])
+        self.exitChange)
+
+
+
+#UTILITY FUNCTIONS
+    
+    #for all
+    @staticmethod
+    def multiFunc(*args):
+        for func in args:
+            func()
 
     def switchFrames(self, newFrame):
         self.currentFrame.pack_forget()
         self.currentFrame = newFrame
         self.currentFrame.pack()
     
+    #for view scene
     def showWList(self, wList: dict):
         self.nameList.delete(0, END)
         self.quaList.delete(0, END)
@@ -143,31 +176,9 @@ class Gui (TKBase):
         for item in wList:
             self.nameList.insert(i, item)
             self.quaList.insert(i, wList[item][0]) 
-            self.priceList.insert(i, wList[item][1])
+            self.priceList.insert(i, f"${float(wList[item][1]):,.2f}")
             self.favList.insert(i, wList[item][2])
             i += 1
-
-
-    @staticmethod
-    def multiFunc(*args):
-        for func in args:
-            func()
-
-    def editFunc(self, b: bool):
-        self.editType = b
-
-    @staticmethod
-    def checkVar(var):
-        if var.get() == 1:
-            return True
-        else:
-            return False
-        
-    def clearInfo(self):
-        self.nameVar.set("")
-        self.quaVar.set("")
-        self.priceVar.set("")
-        self.favVar.set(0)
 
     def findClicked(self):
         num = None
@@ -187,7 +198,30 @@ class Gui (TKBase):
         if num is not None:
             return self.nameList.get(num)
         return False
+    
+    def clearInfo(self):
+        self.nameVar.set("")
+        self.quaVar.set("")
+        self.priceVar.set("")
+        self.favVar.set(0)
 
+    #for add scene
+    @staticmethod
+    def checkVar(var):
+        if var.get() == 1:
+            return True
+        else:
+            return False
+        
+    def editFunc(self, b: bool):
+        self.editType = b
+
+    def nameState(self, b: bool):
+        if b:
+            self.nameInput["state"] = "normal"
+        else:
+            self.nameInput["state"] = "disabled"
+        
     def checkEntries(self) -> bool:
         if self.nameVar.get() == "" or self.quaVar.get() == "" or self.priceVar.get() == "":
             self.outputChange.set("Missing information!")
@@ -198,6 +232,9 @@ class Gui (TKBase):
         else:
             return False
         return True
+    
+
+#BUTTON METHODS
     
     def changeFunc (self):
 
@@ -222,6 +259,8 @@ class Gui (TKBase):
             else:
                 self.outputChange.set("Item Doesn't exist")
 
+        self.wList.save()
+
     def sortFunc (self):
 
         if self.checkVar(self.sortFavVar) and self.checkVar(self.sortPriceVar):
@@ -237,22 +276,36 @@ class Gui (TKBase):
 
     def updateFunc(self):
         if not (item := self.findClicked()):
+            self.outputView.set("Click an item to update")
             return
         
-        self.switchFrames(self.changeFrame)
+        
+        self.switchFrames(self.changeScene)
         self.editType = False
         self.clearInfo()
 
         self.nameVar.set(item)
         self.nameInput["state"] = "disabled"
+        self.quaVar.set(self.wList.view[item][0])
+        self.priceVar.set(self.wList.view[item][1])
+        self.favVar.set(1 if self.wList.view[item][2] == "True" else 0)
+
         self.outputChange.set("")
+        self.outputView.set("")
+
 
     def delFunc(self):
         if not (item := self.findClicked()):
+            self.outputView.set("Click an item to delete")
             return
 
+        
         self.wList.deleteItem(item)
         self.showWList(self.wList.view)
+
+        self.outputView.set("")
+
+        self.wList.save()
         
 
 

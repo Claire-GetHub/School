@@ -1,4 +1,5 @@
 import csv
+from os.path import exists
 
 class WishList:
 
@@ -13,9 +14,11 @@ class WishList:
 
         :returns: a disctionary with all the information from wishlist. Stored in the format: "item: [quantity, price, favorite]"
         """
+        if not exists(self.__fileName):
+            return {}
 
         wList = {}
-        with open(self.__fileName, "w+") as csvfile:
+        with open(self.__fileName, "r") as csvfile:
             #makes it readable
             reader = csv.DictReader(csvfile)
             #the headers of the csv file
@@ -39,7 +42,10 @@ class WishList:
             writer.writeheader()
             for item in self.__wList:
                 #writes down each row
-                writer.writerow({'Item': item, 'Quantity': self.__wList[item][0], 'Price': self.__wList[item][1], 'Favorite': self.__wList[item][2]})
+                try:
+                    writer.writerow({'Item': item, 'Quantity': self.__wList[item][0], 'Price': self.__wList[item][1], 'Favorite': self.__wList[item][2]})
+                except UnicodeEncodeError:
+                    writer.writerow({'Item': "NAME ERROR", 'Quantity': self.__wList[item][0], 'Price': self.__wList[item][1], 'Favorite': self.__wList[item][2]})
     
     def clear(self):
         """
@@ -116,9 +122,30 @@ class WishList:
                 fav[item] = self.__wList[item]
         #return fav to be printed
         return fav
+    
+    def sortPrice(self, lowest: bool = True, fav: bool = False) -> dict:
+        """
+        returns a dictionary sorted by price
+
+        :param lowest: sorts lowest to highest if True. Sorts highest to lowest if False.
+
+        :returns: a dict that is sorted by price. In the format: "item: [quantity, price, favorite]"
+        """
+
+        l = self.sortFav() if fav else self.__wList
+
+        listDict = [[item, l[item][0], float(l[item][1]), l[item][2]] for item in l]
+
+        listDict.sort(key=self.__price)
+        
+        return {lst[0]: [lst[1],lst[2],lst[3]] for lst in listDict}
+
+    @staticmethod
+    def __price(lst):
+        return lst[2]
         
 
-    def sortPrice(self, lowest: bool = True, fav: bool = False) -> dict:
+    def __sortPrice(self, lowest: bool = True, fav: bool = False) -> dict:
         """
         returns a dictionary sorted by price
 

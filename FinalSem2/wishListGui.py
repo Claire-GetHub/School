@@ -152,7 +152,7 @@ class Gui (TKBase):
 
 
 
-#UTILITY FUNCTIONS
+#UTILITY METHODS
     
     #for all
     @staticmethod
@@ -178,7 +178,7 @@ class Gui (TKBase):
     def showWList(self, wList: dict):
         """
         Shows the current info from the given dictionary on the lightboxes.
-        :param wList: the dictionary with the dictionary to be shown. In the formate "item: [quantity, price, favorite]".
+        :param wList: The dictionary to be shown. In the format "item: [quantity, price, favorite]".
         """
         self.nameList.delete(0, END)
         self.quaList.delete(0, END)
@@ -230,7 +230,7 @@ class Gui (TKBase):
 
     def editFunc(self, b: bool):
         """
-        changes the value of self.editType to b.
+        Changes the value of self.editType to b.
         :param b: self.editType new value.
         """
         self.editType = b

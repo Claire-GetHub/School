@@ -291,7 +291,9 @@ class Gui (TKBase):
         self.wList.save()
 
     def sortFunc (self):
-
+        """
+        Runs when a sorting button is clicked. Chooses which type of sorted list will be shown.
+        """
         if self.sortFavVar.get() and self.sortPriceVar.get():
             shownList = self.wList.sortPrice(fav= True)
         elif self.sortFavVar.get():
@@ -304,6 +306,9 @@ class Gui (TKBase):
         self.showWList(shownList)
 
     def updateFunc(self):
+        """
+        Runs when the update button is clicked. Switches to the change screen and puts it into the update mode.
+        """
         if not (item := self.findClicked()):
             self.outputView.set("Click an item to update")
             return
@@ -324,6 +329,9 @@ class Gui (TKBase):
 
 
     def delFunc(self):
+        """
+        Runs when the delete button is clicked. Deletes the selected item and then shows the new list.
+        """
         if not (item := self.findClicked()):
             self.outputView.set("Click an item to delete")
             return
